@@ -1,6 +1,7 @@
 """All different types of document loaders."""
 
 from langchain.document_loaders.airbyte_json import AirbyteJSONLoader
+from langchain.document_loaders.apify_dataset import ApifyDatasetLoader
 from langchain.document_loaders.azlyrics import AZLyricsLoader
 from langchain.document_loaders.blackboard import BlackboardLoader
 from langchain.document_loaders.college_confidential import CollegeConfidentialLoader
@@ -106,4 +107,5 @@ __all__ = [
     "GoogleApiClient",
     "CSVLoader",
     "BlackboardLoader",
+    "ApifyDatasetLoader",
 ]
