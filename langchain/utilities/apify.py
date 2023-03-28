@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Optional
 
 from pydantic import BaseModel, root_validator
 
@@ -13,7 +13,7 @@ class ApifyWrapper(BaseModel):
 
     @root_validator()
     def validate_environment(cls, values: Dict) -> Dict:
-        """Validate that API key and python package exists in environment."""
+        """Validate that API key and python package exist in the current environment."""
         apify_api_key = get_from_dict_or_env(values, "apify_api_key", "APIFY_API_KEY")
 
         try:
@@ -29,66 +29,50 @@ class ApifyWrapper(BaseModel):
 
         return values
 
-    def run(
+    def call(
         self,
-        urls: List[str],
-        *,
-        actor_name: str = "jirimoravcik/content-crawler-copy",
-        run_input: Optional[Dict] = None,
-        mapping_function: Optional[Callable[[Dict], Document]] = None,
+        actor_name: str,
+        run_input: Dict,
+        dataset_mapping_function: Callable[[Dict], Document],
     ):
-        run_input = run_input or {
-            "extendOutputFunction": "($) => {\n    const result = {};\n    // Uncomment to add a title to the output\n    // result.pageTitle = $('title').text().trim();\n\n    return result;\n}",
-            "proxyConfiguration": {"useApifyProxy": True},
-            "saveHtml": "link",
-            "saveSnapshots": True,
-            "startUrls": list(map(lambda url: {"url": url}, urls)),
-            "crawlerType": "browserPuppeteer",
-            "maxDepth": 9999,
-            "maxPagesPerCrawl": 9999999,
-            "maxConcurrency": 200,
-        }
-        mapping_function = mapping_function or (
-            lambda item: Document(
-                page_content=item["text"], metadata={"source": item["url"]}
-            )
-        )
+        """Run an Actor on the Apify platform, wait for it to finish and get results.
+
+        Args:
+            actor_name (str): The name of the Actor on the Apify platform.
+            run_input (Dict): The input of the Actor you're trying to run.
+            dataset_mapping_function (Callable): A function that takes a single dictionary (Apify dataset item) and converts it to an instance of the Document class.
+
+        Returns:
+            ApifyDatasetLoader: A loader that will fetch the data from the Actor run's default dataset.
+        """
         actor_call = self.apify_client.actor(actor_name).call(run_input=run_input)
 
         return ApifyDatasetLoader(
             dataset_id=actor_call["defaultDatasetId"],
-            mapping_function=mapping_function,
+            dataset_mapping_function=dataset_mapping_function,
         )
 
     async def arun(
         self,
-        urls: List[str],
-        *,
-        actor_name: str = "jirimoravcik/content-crawler-copy",
-        run_input: Optional[Dict] = None,
-        mapping_function: Optional[Callable[[Dict], Document]] = None,
+        actor_name: str,
+        run_input: Optional[Dict],
+        dataset_mapping_function: Optional[Callable[[Dict], Document]],
     ):
-        run_input = run_input or {
-            "extendOutputFunction": "($) => {\n    const result = {};\n    // Uncomment to add a title to the output\n    // result.pageTitle = $('title').text().trim();\n\n    return result;\n}",
-            "proxyConfiguration": {"useApifyProxy": True},
-            "saveHtml": "link",
-            "saveSnapshots": True,
-            "startUrls": list(map(lambda url: {"url": url}, urls)),
-            "crawlerType": "browserPuppeteer",
-            "maxDepth": 9999,
-            "maxPagesPerCrawl": 9999999,
-            "maxConcurrency": 200,
-        }
-        mapping_function = mapping_function or (
-            lambda item: Document(
-                page_content=item["text"], metadata={"source": item["url"]}
-            )
-        )
+        """Run an Actor on the Apify platform, wait for it to finish and get results.
+
+        Args:
+            actor_name (str): The name of the Actor on the Apify platform.
+            run_input (Dict): The input of the Actor you're trying to run.
+            dataset_mapping_function (Callable): A function that takes a single dictionary (Apify dataset item) and converts it to an instance of the Document class.
+
+        Returns:
+            ApifyDatasetLoader: A loader that will fetch the data from the Actor run's default dataset.
+        """
         actor_call = await self.apify_client_async.actor(actor_name).call(
             run_input=run_input
         )
 
         return ApifyDatasetLoader(
             dataset_id=actor_call["defaultDatasetId"],
-            mapping_function=mapping_function,
+            dataset_mapping_function=dataset_mapping_function,
         )

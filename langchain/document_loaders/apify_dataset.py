@@ -32,7 +32,7 @@ class ApifyDatasetLoader(BaseLoader, BaseModel):
 
     @root_validator()
     def validate_environment(cls, values: Dict) -> Dict:
-        """Validate that API key and python package exists in the environment."""
+        """Validate that API key and python package exist in the current environment."""
         apify_api_key = get_from_dict_or_env(values, "apify_api_key", "APIFY_API_KEY")
 
         try:
