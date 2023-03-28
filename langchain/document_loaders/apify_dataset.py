@@ -13,11 +13,22 @@ class ApifyDatasetLoader(BaseLoader, BaseModel):
 
     apify_client: Any
     dataset_id: str
-    mapping_function: Callable[[Dict], Document]
+    """The ID of the dataset on the Apify platform."""
+    dataset_mapping_function: Callable[[Dict], Document]
+    """A function that takes a single dictionary (Apify dataset item) and converts it to an instance of the Document class."""
 
-    def __init__(self, dataset_id: str, mapping_function: Callable[[Dict], Document]):
-        """Initialize with dataset ID."""
-        super().__init__(dataset_id=dataset_id, mapping_function=mapping_function)
+    def __init__(
+        self, dataset_id: str, dataset_mapping_function: Callable[[Dict], Document]
+    ):
+        """Initialize the loader with dataset ID and a mapping function.
+
+        Args:
+            dataset_id (str): The ID of the dataset on the Apify platform.
+            dataset_mapping_function (Callable): A function that takes a single dictionary (Apify dataset item) and converts it to an instance of the Document class.
+        """
+        super().__init__(
+            dataset_id=dataset_id, dataset_mapping_function=dataset_mapping_function
+        )
 
     @root_validator()
     def validate_environment(cls, values: Dict) -> Dict:
@@ -39,4 +50,4 @@ class ApifyDatasetLoader(BaseLoader, BaseModel):
     def load(self) -> List[Document]:
         """Load documents."""
         dataset_items = self.apify_client.dataset(self.dataset_id).list_items().items
-        return list(map(self.mapping_function, dataset_items))
+        return list(map(self.dataset_mapping_function, dataset_items))
