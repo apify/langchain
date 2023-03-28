@@ -187,7 +187,7 @@ def _get_human_tool(**kwargs: Any) -> BaseTool:
 def _get_apify(**kwargs: Any) -> BaseTool:
     return Tool(
         name="Apify",
-        description="Useful for scraping websites to get data for question answering.",
+        description="Useful for scraping websites to get data for LLMs.",
         func=ApifyWrapper(**kwargs).call,
         coroutine=ApifyWrapper(**kwargs).acall,
     )
