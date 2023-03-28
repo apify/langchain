@@ -5,7 +5,6 @@ from pydantic import BaseModel, root_validator
 
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
-from langchain.utils import get_from_dict_or_env
 
 
 class ApifyDatasetLoader(BaseLoader, BaseModel):
@@ -32,13 +31,12 @@ class ApifyDatasetLoader(BaseLoader, BaseModel):
 
     @root_validator()
     def validate_environment(cls, values: Dict) -> Dict:
-        """Validate that API key and python package exist in the current environment."""
-        apify_api_key = get_from_dict_or_env(values, "apify_api_key", "APIFY_API_KEY")
+        """Validate that the python package exists in the current environment."""
 
         try:
             from apify_client import ApifyClient
 
-            values["apify_client"] = ApifyClient(apify_api_key)
+            values["apify_client"] = ApifyClient()
         except ImportError:
             raise ValueError(
                 "Could not import apify-client python package. "
