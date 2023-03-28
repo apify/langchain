@@ -184,6 +184,7 @@ def _get_bing_search(**kwargs: Any) -> BaseTool:
 def _get_human_tool(**kwargs: Any) -> BaseTool:
     return HumanInputRun(**kwargs)
 
+
 def _get_apify(**kwargs: Any) -> BaseTool:
     return Tool(
         name="Apify",

@@ -14,6 +14,7 @@ class ApifyWrapper(BaseModel):
     and the environment variable ``APIFY_API_KEY`` set with your API key, or pass
     `apify_api_key` as a named parameter to the constructor.
     """
+
     apify_client: Any
     apify_client_async: Any
 
