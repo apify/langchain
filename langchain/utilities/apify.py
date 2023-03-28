@@ -8,6 +8,12 @@ from langchain.utils import get_from_dict_or_env
 
 
 class ApifyWrapper(BaseModel):
+    """Wrapper around Apify.
+
+    To use, you should have the ``apify-client`` python package installed,
+    and the environment variable ``APIFY_API_KEY`` set with your API key, or pass
+    `apify_api_key` as a named parameter to the constructor.
+    """
     apify_client: Any
     apify_client_async: Any
 
@@ -31,21 +37,21 @@ class ApifyWrapper(BaseModel):
 
     def call(
         self,
-        actor_name: str,
+        actor_id: str,
         run_input: Dict,
         dataset_mapping_function: Callable[[Dict], Document],
     ):
         """Run an Actor on the Apify platform, wait for it to finish and get results.
 
         Args:
-            actor_name (str): The name of the Actor on the Apify platform.
+            actor_id (str): The ID or name of the Actor on the Apify platform.
             run_input (Dict): The input of the Actor you're trying to run.
             dataset_mapping_function (Callable): A function that takes a single dictionary (Apify dataset item) and converts it to an instance of the Document class.
 
         Returns:
             ApifyDatasetLoader: A loader that will fetch the data from the Actor run's default dataset.
         """
-        actor_call = self.apify_client.actor(actor_name).call(run_input=run_input)
+        actor_call = self.apify_client.actor(actor_id).call(run_input=run_input)
 
         return ApifyDatasetLoader(
             dataset_id=actor_call["defaultDatasetId"],
@@ -54,21 +60,21 @@ class ApifyWrapper(BaseModel):
 
     async def arun(
         self,
-        actor_name: str,
+        actor_id: str,
         run_input: Optional[Dict],
         dataset_mapping_function: Optional[Callable[[Dict], Document]],
     ):
         """Run an Actor on the Apify platform, wait for it to finish and get results.
 
         Args:
-            actor_name (str): The name of the Actor on the Apify platform.
+            actor_id (str): The ID or name of the Actor on the Apify platform.
             run_input (Dict): The input of the Actor you're trying to run.
             dataset_mapping_function (Callable): A function that takes a single dictionary (Apify dataset item) and converts it to an instance of the Document class.
 
         Returns:
             ApifyDatasetLoader: A loader that will fetch the data from the Actor run's default dataset.
         """
-        actor_call = await self.apify_client_async.actor(actor_name).call(
+        actor_call = await self.apify_client_async.actor(actor_id).call(
             run_input=run_input
         )
 
