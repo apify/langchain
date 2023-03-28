@@ -58,7 +58,7 @@ class ApifyWrapper(BaseModel):
             dataset_mapping_function=dataset_mapping_function,
         )
 
-    async def arun(
+    async def acall(
         self,
         actor_id: str,
         run_input: Optional[Dict],
