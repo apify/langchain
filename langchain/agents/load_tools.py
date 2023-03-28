@@ -19,6 +19,7 @@ from langchain.tools.python.tool import PythonREPLTool
 from langchain.tools.requests.tool import RequestsGetTool
 from langchain.tools.wikipedia.tool import WikipediaQueryRun
 from langchain.tools.wolfram_alpha.tool import WolframAlphaQueryRun
+from langchain.utilities.apify import ApifyWrapper
 from langchain.utilities.bash import BashProcess
 from langchain.utilities.bing_search import BingSearchAPIWrapper
 from langchain.utilities.google_search import GoogleSearchAPIWrapper
@@ -183,6 +184,14 @@ def _get_bing_search(**kwargs: Any) -> BaseTool:
 def _get_human_tool(**kwargs: Any) -> BaseTool:
     return HumanInputRun(**kwargs)
 
+def _get_apify(**kwargs: Any) -> BaseTool:
+    return Tool(
+        name="Apify",
+        description="Useful for scraping websites to get data for question answering.",
+        func=ApifyWrapper(**kwargs).call,
+        coroutine=ApifyWrapper(**kwargs).acall,
+    )
+
 
 _EXTRA_LLM_TOOLS = {
     "news-api": (_get_news_api, ["news_api_key"]),
@@ -207,6 +216,7 @@ _EXTRA_OPTIONAL_TOOLS = {
     "searx-search": (_get_searx_search, ["searx_host", "engines", "aiosession"]),
     "wikipedia": (_get_wikipedia, ["top_k_results"]),
     "human": (_get_human_tool, ["prompt_func", "input_func"]),
+    "apify": (_get_apify, ["apify_api_key"]),
 }
 
 
