@@ -21,7 +21,9 @@ class ApifyWrapper(BaseModel):
     @root_validator()
     def validate_environment(cls, values: Dict) -> Dict:
         """Validate that an Apify API token is set and the apify-client Python package exists in the current environment."""
-        apify_api_token = get_from_dict_or_env(values, "apify_api_token", "APIFY_API_TOKEN")
+        apify_api_token = get_from_dict_or_env(
+            values, "apify_api_token", "APIFY_API_TOKEN"
+        )
 
         try:
             from apify_client import ApifyClient, ApifyClientAsync
@@ -41,6 +43,10 @@ class ApifyWrapper(BaseModel):
         actor_id: str,
         run_input: Dict,
         dataset_mapping_function: Callable[[Dict], Document],
+        *,
+        build: Optional[str] = None,
+        memory_mbytes: Optional[int] = None,
+        timeout_secs: Optional[int] = None,
     ):
         """Run an Actor on the Apify platform and wait for it to finish, so that its results are ready.
 
@@ -48,11 +54,19 @@ class ApifyWrapper(BaseModel):
             actor_id (str): The ID or name of the Actor on the Apify platform.
             run_input (Dict): The input object of the Actor that you're trying to run.
             dataset_mapping_function (Callable): A function that takes a single dictionary (an Apify dataset item) and converts it to an instance of the Document class.
+            build (str, optional): Optionally specifies the actor build to run. It can be either a build tag or build number.
+            memory_mbytes (int, optional): Optional memory limit for the run, in megabytes.
+            timeout_secs (int, optional): Optional timeout for the run, in seconds.
 
         Returns:
             ApifyDatasetLoader: A loader that will fetch the records from the Actor run's default dataset.
         """
-        actor_call = self.apify_client.actor(actor_id).call(run_input=run_input)
+        actor_call = self.apify_client.actor(actor_id).call(
+            run_input=run_input,
+            build=build,
+            memory_mbytes=memory_mbytes,
+            timeout_secs=timeout_secs,
+        )
 
         return ApifyDatasetLoader(
             dataset_id=actor_call["defaultDatasetId"],
@@ -64,6 +78,9 @@ class ApifyWrapper(BaseModel):
         actor_id: str,
         run_input: Optional[Dict],
         dataset_mapping_function: Optional[Callable[[Dict], Document]],
+        build: Optional[str] = None,
+        memory_mbytes: Optional[int] = None,
+        timeout_secs: Optional[int] = None,
     ):
         """Run an Actor on the Apify platform and wait for it to finish, so that its results are ready.
 
@@ -71,12 +88,18 @@ class ApifyWrapper(BaseModel):
             actor_id (str): The ID or name of the Actor or Actor task on the Apify platform.
             run_input (Dict): The input object of the Actor that you're trying to run.
             dataset_mapping_function (Callable): A function that takes a single dictionary (an Apify dataset item) and converts it to an instance of the Document class.
+            build (str, optional): Optionally specifies the actor build to run. It can be either a build tag or build number.
+            memory_mbytes (int, optional): Optional memory limit for the run, in megabytes.
+            timeout_secs (int, optional): Optional timeout for the run, in seconds.
 
         Returns:
             ApifyDatasetLoader: A loader that will fetch the data from the Actor run's default dataset.
         """
         actor_call = await self.apify_client_async.actor(actor_id).call(
-            run_input=run_input
+            run_input=run_input,
+            build=build,
+            memory_mbytes=memory_mbytes,
+            timeout_secs=timeout_secs,
         )
 
         return ApifyDatasetLoader(
