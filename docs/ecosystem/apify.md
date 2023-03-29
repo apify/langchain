@@ -30,7 +30,7 @@ from langchain.agents import load_tools
 tools = load_tools(["apify"])
 ```
 
-For more information on this, see [this page](../modules/agents/tools/getting_started.md)
+For more information on this, see [this page](../modules/agents/tools/getting_started.md).
 
 ### Loader
 
