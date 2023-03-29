@@ -184,6 +184,7 @@ def _get_bing_search(**kwargs: Any) -> BaseTool:
 def _get_human_tool(**kwargs: Any) -> BaseTool:
     return HumanInputRun(**kwargs)
 
+
 _EXTRA_LLM_TOOLS = {
     "news-api": (_get_news_api, ["news_api_key"]),
     "tmdb-api": (_get_tmdb_api, ["tmdb_bearer_token"]),
