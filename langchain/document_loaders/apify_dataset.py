@@ -14,16 +14,16 @@ class ApifyDatasetLoader(BaseLoader, BaseModel):
     dataset_id: str
     """The ID of the dataset on the Apify platform."""
     dataset_mapping_function: Callable[[Dict], Document]
-    """A function that takes a single dictionary (Apify dataset item) and converts it to an instance of the Document class."""
+    """A custom function that takes a single dictionary (an Apify dataset item) and converts it to an instance of the Document class."""
 
     def __init__(
         self, dataset_id: str, dataset_mapping_function: Callable[[Dict], Document]
     ):
-        """Initialize the loader with dataset ID and a mapping function.
+        """Initialize the loader with an Apify dataset ID and a mapping function.
 
         Args:
             dataset_id (str): The ID of the dataset on the Apify platform.
-            dataset_mapping_function (Callable): A function that takes a single dictionary (Apify dataset item) and converts it to an instance of the Document class.
+            dataset_mapping_function (Callable): A function that takes a single dictionary (an Apify dataset item) and converts it to an instance of the Document class.
         """
         super().__init__(
             dataset_id=dataset_id, dataset_mapping_function=dataset_mapping_function
@@ -31,7 +31,7 @@ class ApifyDatasetLoader(BaseLoader, BaseModel):
 
     @root_validator()
     def validate_environment(cls, values: Dict) -> Dict:
-        """Validate that the python package exists in the current environment."""
+        """Validate that the apify-client Python package exists in the current environment."""
 
         try:
             from apify_client import ApifyClient
@@ -39,8 +39,8 @@ class ApifyDatasetLoader(BaseLoader, BaseModel):
             values["apify_client"] = ApifyClient()
         except ImportError:
             raise ValueError(
-                "Could not import apify-client python package. "
-                "Please it install it with `pip install apify-client`."
+                "Could not import apify-client Python package. "
+                "Please install it with `pip install apify-client`."
             )
 
         return values
