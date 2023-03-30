@@ -1,6 +1,6 @@
 # Apify
 
-This page covers how to use the [Apify](https://apify.com) within LangChain.
+This page covers how to use [Apify](https://apify.com) within LangChain.
 
 ## Overview
 
