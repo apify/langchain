@@ -76,8 +76,9 @@ class ApifyWrapper(BaseModel):
     async def acall_actor(
         self,
         actor_id: str,
-        run_input: Optional[Dict],
-        dataset_mapping_function: Optional[Callable[[Dict], Document]],
+        run_input: Dict,
+        dataset_mapping_function: Callable[[Dict], Document],
+        *,
         build: Optional[str] = None,
         memory_mbytes: Optional[int] = None,
         timeout_secs: Optional[int] = None,
