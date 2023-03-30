@@ -85,7 +85,7 @@ class ApifyWrapper(BaseModel):
         """Run an Actor on the Apify platform and wait for it to finish, so that its results are ready.
 
         Args:
-            actor_id (str): The ID or name of the Actor or Actor task on the Apify platform.
+            actor_id (str): The ID or name of the Actor on the Apify platform.
             run_input (Dict): The input object of the Actor that you're trying to run.
             dataset_mapping_function (Callable): A function that takes a single dictionary (an Apify dataset item) and converts it to an instance of the Document class.
             build (str, optional): Optionally specifies the actor build to run. It can be either a build tag or build number.
@@ -93,7 +93,7 @@ class ApifyWrapper(BaseModel):
             timeout_secs (int, optional): Optional timeout for the run, in seconds.
 
         Returns:
-            ApifyDatasetLoader: A loader that will fetch the data from the Actor run's default dataset.
+            ApifyDatasetLoader: A loader that will fetch the records from the Actor run's default dataset.
         """
         actor_call = await self.apify_client_async.actor(actor_id).call(
             run_input=run_input,
