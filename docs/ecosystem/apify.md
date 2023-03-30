@@ -32,10 +32,7 @@ You can use the `ApifyWrapper` to run Actors on the Apify platform.
 from langchain.utilities import ApifyWrapper
 ```
 
-Here is a full example that uses the [Website Content Crawler](https://apify.com/apify/website-content-crawler)
-Actor to feed documents into a vector index, and answers questions from it.
-
-For an interactive walkthrough, see [this notebook](../modules/agents/tools/examples/apify.ipynb).
+For a more detailed walkthrough of this wrapper, see [this notebook](../modules/agents/tools/examples/apify.ipynb).
 
 
 ### Loader
