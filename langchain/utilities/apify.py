@@ -122,7 +122,7 @@ class ApifyWrapper(BaseModel):
             dataset_mapping_function=dataset_mapping_function,
         )
 
-    def call_task(
+    def call_actor_task(
         self,
         task_id: str,
         task_input: Dict,
@@ -162,7 +162,7 @@ class ApifyWrapper(BaseModel):
             dataset_mapping_function=dataset_mapping_function,
         )
     
-    async def acall_task(
+    async def acall_actor_task(
         self,
         task_id: str,
         task_input: Dict,
