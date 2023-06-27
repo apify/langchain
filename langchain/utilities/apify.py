@@ -132,11 +132,12 @@ class ApifyWrapper(BaseModel):
         memory_mbytes: Optional[int] = None,
         timeout_secs: Optional[int] = None,
     ) -> ApifyDatasetLoader:
-        """Run a task on the Apify platform and wait for results to be ready.
+        """Run a saved Actor task on the Apify platform and wait for results to be ready.
 
         Args:
             task_id (str): The ID or name of the task on the Apify platform.
             task_input (Dict): The input object of the task that you're trying to run.
+                Overrides the task's saved input.
             dataset_mapping_function (Callable): A function that takes a single
                 dictionary (an Apify dataset item) and converts it to an
                 instance of the Document class.
@@ -172,11 +173,12 @@ class ApifyWrapper(BaseModel):
         memory_mbytes: Optional[int] = None,
         timeout_secs: Optional[int] = None,
     ) -> ApifyDatasetLoader:
-        """Run a task on the Apify platform and wait for results to be ready.
+        """Run a saved Actor task on the Apify platform and wait for results to be ready.
 
         Args:
             task_id (str): The ID or name of the task on the Apify platform.
             task_input (Dict): The input object of the task that you're trying to run.
+                Overrides the task's saved input.
             dataset_mapping_function (Callable): A function that takes a single
                 dictionary (an Apify dataset item) and converts it to an
                 instance of the Document class.
