@@ -7,7 +7,23 @@ from langchain.document_loaders.base import BaseLoader
 
 
 class ApifyDatasetLoader(BaseLoader, BaseModel):
-    """Loading Documents from Apify datasets."""
+    """Loads datasets from Apify, a web scraping and data extraction platform.
+
+    Example:
+    ```python
+    from langchain.document_loaders import ApifyDatasetLoader
+    from langchain.document_loaders.base import Document
+
+    loader = ApifyDatasetLoader(
+        dataset_id="your-dataset-id",
+        dataset_mapping_function=lambda dataset_item: Document(
+            page_content=dataset_item["text"], metadata={"source": dataset_item["url"]}
+        ),
+    )
+    documents = loader.load()
+    ```
+
+    """
 
     apify_client: Any
     """An instance of the ApifyClient class from the apify-client Python package."""
